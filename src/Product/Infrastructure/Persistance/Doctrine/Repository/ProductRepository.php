@@ -18,12 +18,13 @@ final class ProductRepository implements ProductRepositoryInterface
 
     public function getCollection(bool $onlyAvalaible, ?int $maxPrice): array
     {
-        $queryBuilder = $this->entityManager->getRepository(Product::class)->createQueryBuilder('p');
+        $queryBuilder = $this->entityManager->createQueryBuilder()->select('p')
+            ->from(Product::class, 'p');
 
-        if ($onlyAvalaible) {
-            $queryBuilder->andWhere('p.available = :available')
-                         ->setParameter('available', true);
-        }
+        // if ($onlyAvalaible) {
+        //     $queryBuilder->where('p.available = :available')
+        //                  ->setParameter('available', true);
+        // }
 
         if ($maxPrice !== null) {
             $queryBuilder->andWhere('p.price <= :maxPrice')
@@ -31,5 +32,10 @@ final class ProductRepository implements ProductRepositoryInterface
         }
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function save(Product $product): void
+    {
+        $this->entityManager->persist($product);
     }
 }

@@ -6,12 +6,12 @@ use App\Product\Domain\Exception\EmptyProductNameException;
 
 class Product
 {
-    private int $id;
+    private string $id;
     private string $name;
     private float $price;
     private bool $available;
 
-    public static function create(int $id, string $name, float $price, bool $available): self
+    public static function create(string $id, string $name, float $price, bool $available): self
     {
         if($name === '') {
             throw new EmptyProductNameException('Product name cannot be empty');
@@ -26,7 +26,7 @@ class Product
         return $product;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
     }
