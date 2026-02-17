@@ -2,6 +2,7 @@
 
 namespace App\Product\Application\Command\Handler;
 
+use App\Product\Application\Command\CommandValidatorInterface;
 use App\Product\Application\Command\CreateProductCommand;
 use App\Product\Domain\Entity\Product;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
@@ -11,12 +12,14 @@ class CreateProductCommandHandler
 {
     public function __construct(
         private readonly ProductRepositoryInterface $productRepository,
-        private readonly TransactionRunnerInterface $transactionRunner  
+        private readonly TransactionRunnerInterface $transactionRunner,
+        private readonly CommandValidatorInterface $commandValidator
     )
     {}
 
     public function __invoke(CreateProductCommand $command): Product
     {
+        $this->commandValidator->validate($command);
         /** @var Product $product */
         $product = $this->transactionRunner->run(function () use ($command) {
 
