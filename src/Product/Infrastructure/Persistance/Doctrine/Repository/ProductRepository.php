@@ -21,10 +21,10 @@ final class ProductRepository implements ProductRepositoryInterface
         $queryBuilder = $this->entityManager->createQueryBuilder()->select('p')
             ->from(Product::class, 'p');
 
-        // if ($onlyAvalaible) {
-        //     $queryBuilder->where('p.available = :available')
-        //                  ->setParameter('available', true);
-        // }
+            if ($onlyAvalaible) {
+                $queryBuilder->where('p.available = :available')
+                            ->setParameter('available', true);
+            }
 
         if ($maxPrice !== null) {
             $queryBuilder->andWhere('p.price <= :maxPrice')
@@ -37,5 +37,10 @@ final class ProductRepository implements ProductRepositoryInterface
     public function save(Product $product): void
     {
         $this->entityManager->persist($product);
+    }
+
+    public function get(string $productId): ?Product
+    {
+        return $this->entityManager->find(Product::class, $productId);
     }
 }

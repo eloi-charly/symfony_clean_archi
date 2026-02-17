@@ -8,5 +8,7 @@ interface ProductRepositoryInterface
 {
       public function getCollection(bool $onlyAvalaible, ?int $maxPrice): array;
 
+      public function get(string $productId): ?Product;
+
       public function save(Product $product): void;
 }

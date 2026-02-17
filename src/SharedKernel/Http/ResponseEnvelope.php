@@ -23,16 +23,16 @@ readonly class ResponseEnvelope
 
     public static function error(string $statusCode, string $message, string $type = 'error', ?int $traceId = null, array $detail = []): self
     {
-        $err = ['code' => $statusCode, 'message' => $message, 'type' => $type];
+        $error = ['code' => $statusCode, 'message' => $message, 'type' => $type];
 
         if($traceId !== null) {
-            $err['traceId'] = $traceId;
+            $error['traceId'] = $traceId;
         }
 
         if(!empty($detail)) {
-            $err['detail'] = $detail;
+            $error['detail'] = $detail;
         }
 
-        return new self($statusCode, ['error' => $err]);
+        return new self($statusCode, ['error' => $error]);
     }
 }

@@ -7,6 +7,7 @@ namespace App\Product\Presentation\Http\Controller;
 use App\Product\Application\Command\CreateProductCommand;
 use App\Product\Application\Command\Handler\CreateProductCommandHandler;
 use App\Product\Application\Query\GetProductQuery;
+use App\Product\Application\Query\Handler\GetProductQueryByIdHandler;
 use App\Product\Application\Query\Handler\GetProductQueryHandler;
 use App\SharedKernel\Http\ResponseEnvelope;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,6 +43,20 @@ final class ProductController
 
         $envelope = ResponseEnvelope::success(['id' => $product->getId()], JsonResponse::HTTP_CREATED);
 
+        return new JsonResponse($envelope->data, $envelope->statusCode);
+    }
+
+    #[Route('/{id}', name: 'products.show', methods: ['GET'])]
+    public function show(string $id, GetProductQueryByIdHandler $handler): JsonResponse
+    {
+        $product = $handler($id);
+        
+        if ($product === null) {
+            $envelope = ResponseEnvelope::error((string) JsonResponse::HTTP_NOT_FOUND, 'Product not found');
+            return new JsonResponse($envelope->data, $envelope->statusCode);
+        }
+
+        $envelope = ResponseEnvelope::success($product);
         return new JsonResponse($envelope->data, $envelope->statusCode);
     }
 }
